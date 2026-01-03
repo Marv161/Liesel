@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>River Plate - Liesel</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Caveat:wght@700&family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        :root {
+            --river-red: #e30613;
+            --river-white: #ffffff;
+        }
+
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            overflow: hidden;
+            background: #000;
+            font-family: 'Bebas Neue', cursive;
+        }
+
+        /* Pantalla de Intro */
+        #intro-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('https://i.ibb.co/mrsLjZvY/entrada.jpg') no-repeat center center;
+            background-size: cover;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            transition: opacity 1s ease-in-out, visibility 1s;
+        }
+
+        .intro-title {
+            color: white;
+            font-size: 4rem;
+            text-align: center;
+            text-shadow: 4px 4px 10px rgba(0,0,0,0.8), 0 0 20px var(--river-red);
+            margin-bottom: 2rem;
+            padding: 0 20px;
+        }
+
+        .enter-btn {
+            background: var(--river-white);
+            color: var(--river-red);
+            padding: 15px 50px;
+            font-size: 2rem;
+            border: 4px solid var(--river-red);
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 15px var(--river-white), 0 0 30px var(--river-red);
+            text-transform: uppercase;
+        }
+
+        .enter-btn:hover {
+            transform: scale(1.1);
+            background: var(--river-red);
+            color: var(--river-white);
+            box-shadow: 0 0 25px var(--river-red), 0 0 50px var(--river-white);
+        }
+
+        /* Contenido Principal */
+        #main-site {
+            display: none;
+            height: 100%;
+            background: url('https://i.ibb.co/TBw05GWn/mudomental.gif') no-repeat center center fixed;
+            background-size: cover;
+            opacity: 0;
+            transition: opacity 1.5s ease-in;
+        }
+
+        .overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.4);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 10;
+        }
+
+        .title-3d {
+            font-size: 6rem;
+            color: #ffffff;
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            text-shadow: 
+                0 1px 0 #ccc, 0 2px 0 #c9c9c9, 0 3px 0 #bbb, 
+                0 4px 0 #b9b9b9, 0 5px 0 #aaa, 0 6px 1px rgba(0,0,0,.1), 
+                2px 2px 2px rgba(255,0,0,0.5);
+            margin-bottom: 10px;
+            animation: floatText 3s ease-in-out infinite;
+        }
+
+        @keyframes floatText {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .main-frame {
+            border: 8px solid white;
+            box-shadow: 0 0 30px 15px rgba(255, 0, 0, 0.8);
+            border-radius: 4px;
+            max-width: 90%;
+            max-height: 50vh;
+            position: relative;
+            z-index: 20;
+        }
+
+        .quote {
+            font-family: 'Caveat', cursive;
+            color: white;
+            font-size: 2.5rem;
+            margin-top: 20px;
+            text-shadow: 2px 2px 8px rgba(0,0,0,0.8);
+        }
+
+        /* Reproductor de Música */
+        #music-player {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 2px solid white;
+            border-radius: 15px;
+            padding: 10px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            z-index: 2000;
+            box-shadow: 0 0 15px rgba(255, 0, 0, 0.5);
+            display: none; /* Se muestra tras el intro */
+        }
+
+        .player-img {
+            width: 60px;
+            height: 60px;
+            border-radius: 8px;
+            border: 2px solid var(--river-red);
+            object-fit: cover;
+        }
+
+        .player-controls {
+            display: flex;
+            flex-direction: column;
+            color: white;
+        }
+
+        .controls-btns {
+            display: flex;
+            gap: 10px;
+            margin-top: 5px;
+        }
+
+        .ctrl-btn {
+            background: white;
+            color: black;
+            border: none;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            font-size: 0.8rem;
+        }
+
+        /* Elementos voladores */
+        .flying-item {
+            position: absolute;
+            pointer-events: none;
+            z-index: 5;
+            user-select: none;
+        }
+
+        @keyframes fly {
+            0% { transform: translate(0, 110vh) rotate(0deg); opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { transform: translate(var(--translateX), -10vh) rotate(var(--rotate)); opacity: 0; }
+        }
+
+        .red-balloon { color: #ff0000; font-size: 2.5rem; }
+        .clown { font-size: 3rem; filter: drop-shadow(0 0 5px red); }
+        .shield { width: 40px; height: 40px; }
+    </style>
+</head>
+<body>
+
+    <!-- PANTALLA DE INTRO -->
+    <div id="intro-screen">
+        <h2 class="intro-title">Bienvenido a Club Atlético River Plate</h2>
+        <button class="enter-btn" id="enter-btn">Entrar</button>
+    </div>
+
+    <!-- REPRODUCTOR -->
+    <div id="music-player">
+        <img src="https://i.ibb.co/ynnbKcNX/image.png" alt="Álbum" class="player-img">
+        <div class="player-controls">
+            <span style="font-size: 0.9rem; font-family: 'Montserrat', sans-serif;">Sonando: Himno Millonario</span>
+            <div class="controls-btns">
+                <button class="ctrl-btn" id="play-pause">II</button>
+                <input type="range" id="volume" min="0" max="1" step="0.1" value="0.5" style="width: 60px; accent-color: red;">
+            </div>
+        </div>
+        <audio id="bg-music" loop>
+            <!-- Reemplaza la URL de abajo por la de tu GitHub raw si es diferente -->
+            <source src="musica.mp3" type="audio/mpeg">
+        </audio>
+    </div>
+
+    <!-- SITIO PRINCIPAL -->
+    <div id="main-site">
+        <div class="overlay">
+            <h1 class="title-3d">Liesel</h1>
+            <img src="https://i.ibb.co/FLC5ZSgP/gallardo.jpg" alt="Marcelo Gallardo" class="main-frame">
+            <p class="quote">"Si llorás, que sea de risa"</p>
+        </div>
+        <div id="animation-container"></div>
+    </div>
+
+    <script>
+        const intro = document.getElementById('intro-screen');
+        const mainSite = document.getElementById('main-site');
+        const enterBtn = document.getElementById('enter-btn');
+        const music = document.getElementById('bg-music');
+        const player = document.getElementById('music-player');
+        const playPauseBtn = document.getElementById('play-pause');
+        const volumeSlider = document.getElementById('volume');
+        const container = document.getElementById('animation-container');
+
+        // Función para entrar al sitio
+        enterBtn.addEventListener('click', () => {
+            // Iniciar música
+            music.play().catch(e => console.log("Audio play prevented", e));
+            
+            // Transición visual
+            intro.style.opacity = '0';
+            setTimeout(() => {
+                intro.style.display = 'none';
+                mainSite.style.display = 'block';
+                player.style.display = 'flex';
+                setTimeout(() => {
+                    mainSite.style.opacity = '1';
+                }, 50);
+            }, 1000);
+
+            // Iniciar animaciones de fondo
+            startAnimations();
+        });
+
+        // Controles de música
+        playPauseBtn.addEventListener('click', () => {
+            if (music.paused) {
+                music.play();
+                playPauseBtn.innerText = 'II';
+            } else {
+                music.pause();
+                playPauseBtn.innerText = '►';
+            }
+        });
+
+        volumeSlider.addEventListener('input', (e) => {
+            music.volume = e.target.value;
+        });
+
+        // Sistema de partículas (Globos, Payasos, Escudos)
+        const items = [
+            { type: 'text', content: '🎈', class: 'red-balloon' },
+            { type: 'text', content: '🤡', class: 'clown' },
+            { type: 'text', content: '⚽', class: 'ball' },
+            { type: 'text', content: '⚪', class: '' },
+            { type: 'text', content: '🔴', class: '' },
+            { type: 'svg', content: 'shield' }
+        ];
+
+        function createShieldSVG() {
+            return `<svg class="shield" viewBox="0 0 100 100">
+                <path d="M50 5 L90 25 L90 65 C90 85 50 95 50 95 C50 95 10 85 10 65 L10 25 L50 5Z" fill="white" stroke="red" stroke-width="4"/>
+                <rect x="15" y="45" width="80" height="12" fill="red" transform="rotate(-45 50 50)"/>
+            </svg>`;
+        }
+
+        function spawnItem() {
+            const itemConfig = items[Math.floor(Math.random() * items.length)];
+            const div = document.createElement('div');
+            div.className = 'flying-item ' + (itemConfig.class || '');
+            
+            if (itemConfig.type === 'text') {
+                div.innerText = itemConfig.content;
+                if(itemConfig.content === '⚪' || itemConfig.content === '🔴') div.style.fontSize = "1.5rem";
+            } else {
+                div.innerHTML = createShieldSVG();
+            }
+
+            const startX = Math.random() * 100;
+            const translateX = (Math.random() - 0.5) * 300;
+            const rotate = Math.random() * 720;
+            const duration = 6 + Math.random() * 12;
+
+            div.style.left = startX + 'vw';
+            div.style.setProperty('--translateX', translateX + 'px');
+            div.style.setProperty('--rotate', rotate + 'deg');
+            div.style.animation = `fly ${duration}s linear forwards`;
+
+            container.appendChild(div);
+            setTimeout(() => div.remove(), duration * 1000);
+        }
+
+        function startAnimations() {
+            setInterval(spawnItem, 450);
+        }
+    </script>
+</body>
+</html>
