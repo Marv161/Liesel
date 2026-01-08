@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+
 <html lang="es">
 <head>
     <meta charset="UTF-8">
@@ -10,6 +10,8 @@
         :root {
             --river-red: #e30613;
             --river-white: #ffffff;
+            --arg-blue: #74ACDF;
+            --sky-blue: #87CEEB;
         }
 
         body, html {
@@ -91,22 +93,63 @@
             z-index: 10;
         }
 
+        /* Liesel con Efecto Wave, Gradient y Glow */
         .title-3d {
-            font-size: 6rem;
-            color: #ffffff;
+            font-size: 8rem;
             text-transform: uppercase;
-            letter-spacing: 4px;
-            text-shadow: 
-                0 1px 0 #ccc, 0 2px 0 #c9c9c9, 0 3px 0 #bbb, 
-                0 4px 0 #b9b9b9, 0 5px 0 #aaa, 0 6px 1px rgba(0,0,0,.1), 
-                2px 2px 2px rgba(255,0,0,0.5);
+            letter-spacing: 6px;
+            line-height: 1;
             margin-bottom: 10px;
-            animation: floatText 3s ease-in-out infinite;
+            position: relative;
+            
+            /* Gradient animado */
+            background: linear-gradient(
+                90deg, 
+                #fff 0%, 
+                #e30613 25%, 
+                #fff 50%, 
+                #e30613 75%, 
+                #fff 100%
+            );
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            
+            /* Brillo y Ondas */
+            filter: drop-shadow(0 0 15px rgba(255, 255, 255, 0.5));
+            animation: flowGradient 4s linear infinite, waveEffect 3s ease-in-out infinite;
         }
 
-        @keyframes floatText {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
+        @keyframes flowGradient {
+            0% { background-position: 0% center; }
+            100% { background-position: 200% center; }
+        }
+
+        @keyframes waveEffect {
+            0%, 100% { transform: scale(1) skewX(0deg); }
+            50% { transform: scale(1.05) skewX(2deg); filter: drop-shadow(0 0 25px rgba(227, 6, 19, 0.8)); }
+        }
+
+        /* Letrero Albiceleste Simplificado */
+        .arg-banner {
+            background: linear-gradient(to bottom, var(--arg-blue) 33%, white 33%, white 66%, var(--arg-blue) 66%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 8px 40px;
+            border-radius: 50px;
+            border: 2px solid white;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5), 0 0 10px var(--arg-blue);
+            margin-bottom: 30px;
+        }
+
+        .stars-container {
+            display: flex;
+            gap: 15px;
+            color: #FFD700;
+            font-size: 2.2rem;
+            text-shadow: 0 0 10px rgba(0,0,0,0.5), 0 0 15px rgba(255, 215, 0, 0.8);
         }
 
         .main-frame {
@@ -114,17 +157,19 @@
             box-shadow: 0 0 30px 15px rgba(255, 0, 0, 0.8);
             border-radius: 4px;
             max-width: 90%;
-            max-height: 50vh;
+            max-height: 45vh;
             position: relative;
             z-index: 20;
         }
 
+        /* Frase en Celeste Cielo */
         .quote {
             font-family: 'Caveat', cursive;
-            color: white;
-            font-size: 2.5rem;
-            margin-top: 20px;
-            text-shadow: 2px 2px 8px rgba(0,0,0,0.8);
+            color: var(--sky-blue);
+            font-size: 3rem;
+            margin-top: 25px;
+            text-shadow: 2px 2px 10px rgba(0,0,0,0.9);
+            font-weight: bold;
         }
 
         /* Reproductor de Música */
@@ -132,17 +177,17 @@
             position: fixed;
             bottom: 20px;
             left: 20px;
-            background: rgba(255, 255, 255, 0.1);
+            background: rgba(0, 0, 0, 0.6);
             backdrop-filter: blur(10px);
             border: 2px solid white;
             border-radius: 15px;
-            padding: 10px;
+            padding: 10px 20px;
             display: flex;
             align-items: center;
             gap: 15px;
             z-index: 2000;
-            box-shadow: 0 0 15px rgba(255, 0, 0, 0.5);
-            display: none; /* Se muestra tras el intro */
+            box-shadow: 0 0 20px rgba(255, 0, 0, 0.4);
+            display: none;
         }
 
         .player-img {
@@ -166,18 +211,21 @@
         }
 
         .ctrl-btn {
-            background: white;
-            color: black;
-            border: none;
+            background: var(--river-red);
+            color: white;
+            border: 1px solid white;
             border-radius: 50%;
-            width: 30px;
-            height: 30px;
+            width: 32px;
+            height: 32px;
             display: flex;
             justify-content: center;
             align-items: center;
             cursor: pointer;
             font-size: 0.8rem;
+            transition: 0.3s;
         }
+
+        .ctrl-btn:hover { background: white; color: var(--river-red); }
 
         /* Elementos voladores */
         .flying-item {
@@ -194,9 +242,8 @@
             100% { transform: translate(var(--translateX), -10vh) rotate(var(--rotate)); opacity: 0; }
         }
 
-        .red-balloon { color: #ff0000; font-size: 2.5rem; }
-        .clown { font-size: 3rem; filter: drop-shadow(0 0 5px red); }
-        .shield { width: 40px; height: 40px; }
+        .red-balloon { color: #ff0000; font-size: 3.5rem; filter: drop-shadow(0 0 8px rgba(255,0,0,0.6)); }
+        .white-ball { color: white; font-size: 2rem; filter: drop-shadow(0 0 10px rgba(255,255,255,0.7)); opacity: 0.8; }
     </style>
 </head>
 <body>
@@ -211,14 +258,13 @@
     <div id="music-player">
         <img src="https://i.ibb.co/ynnbKcNX/image.png" alt="Álbum" class="player-img">
         <div class="player-controls">
-            <span style="font-size: 0.9rem; font-family: 'Montserrat', sans-serif;">Sonando: Himno Millonario</span>
+            <span style="font-size: 1rem; font-family: 'Montserrat', sans-serif; font-weight: bold; letter-spacing: 1px;">Welcome to Derry</span>
             <div class="controls-btns">
                 <button class="ctrl-btn" id="play-pause">II</button>
-                <input type="range" id="volume" min="0" max="1" step="0.1" value="0.5" style="width: 60px; accent-color: red;">
+                <input type="range" id="volume" min="0" max="1" step="0.1" value="0.5" style="width: 70px; accent-color: #e30613;">
             </div>
         </div>
         <audio id="bg-music" loop>
-            <!-- Reemplaza la URL de abajo por la de tu GitHub raw si es diferente -->
             <source src="musica.mp3" type="audio/mpeg">
         </audio>
     </div>
@@ -227,6 +273,14 @@
     <div id="main-site">
         <div class="overlay">
             <h1 class="title-3d">Liesel</h1>
+            
+            <!-- Letrero Albiceleste con Estrellas Centradas -->
+            <div class="arg-banner">
+                <div class="stars-container">
+                    <span>★</span><span>★</span><span>★</span>
+                </div>
+            </div>
+
             <img src="https://i.ibb.co/FLC5ZSgP/gallardo.jpg" alt="Marcelo Gallardo" class="main-frame">
             <p class="quote">"Si llorás, que sea de risa"</p>
         </div>
@@ -243,12 +297,8 @@
         const volumeSlider = document.getElementById('volume');
         const container = document.getElementById('animation-container');
 
-        // Función para entrar al sitio
         enterBtn.addEventListener('click', () => {
-            // Iniciar música
             music.play().catch(e => console.log("Audio play prevented", e));
-            
-            // Transición visual
             intro.style.opacity = '0';
             setTimeout(() => {
                 intro.style.display = 'none';
@@ -258,12 +308,9 @@
                     mainSite.style.opacity = '1';
                 }, 50);
             }, 1000);
-
-            // Iniciar animaciones de fondo
             startAnimations();
         });
 
-        // Controles de música
         playPauseBtn.addEventListener('click', () => {
             if (music.paused) {
                 music.play();
@@ -278,39 +325,24 @@
             music.volume = e.target.value;
         });
 
-        // Sistema de partículas (Globos, Payasos, Escudos)
+        // Solo globos rojos y bolas blancas
         const items = [
             { type: 'text', content: '🎈', class: 'red-balloon' },
-            { type: 'text', content: '🤡', class: 'clown' },
-            { type: 'text', content: '⚽', class: 'ball' },
-            { type: 'text', content: '⚪', class: '' },
-            { type: 'text', content: '🔴', class: '' },
-            { type: 'svg', content: 'shield' }
+            { type: 'text', content: '⚪', class: 'white-ball' },
+            { type: 'text', content: '🎈', class: 'red-balloon' },
+            { type: 'text', content: '⚪', class: 'white-ball' }
         ];
-
-        function createShieldSVG() {
-            return `<svg class="shield" viewBox="0 0 100 100">
-                <path d="M50 5 L90 25 L90 65 C90 85 50 95 50 95 C50 95 10 85 10 65 L10 25 L50 5Z" fill="white" stroke="red" stroke-width="4"/>
-                <rect x="15" y="45" width="80" height="12" fill="red" transform="rotate(-45 50 50)"/>
-            </svg>`;
-        }
 
         function spawnItem() {
             const itemConfig = items[Math.floor(Math.random() * items.length)];
             const div = document.createElement('div');
             div.className = 'flying-item ' + (itemConfig.class || '');
-            
-            if (itemConfig.type === 'text') {
-                div.innerText = itemConfig.content;
-                if(itemConfig.content === '⚪' || itemConfig.content === '🔴') div.style.fontSize = "1.5rem";
-            } else {
-                div.innerHTML = createShieldSVG();
-            }
+            div.innerText = itemConfig.content;
 
             const startX = Math.random() * 100;
             const translateX = (Math.random() - 0.5) * 300;
-            const rotate = Math.random() * 720;
-            const duration = 6 + Math.random() * 12;
+            const rotate = Math.random() * 360;
+            const duration = 8 + Math.random() * 8;
 
             div.style.left = startX + 'vw';
             div.style.setProperty('--translateX', translateX + 'px');
@@ -322,7 +354,7 @@
         }
 
         function startAnimations() {
-            setInterval(spawnItem, 450);
+            setInterval(spawnItem, 600);
         }
     </script>
 </body>
